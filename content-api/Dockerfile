@@ -13,5 +13,5 @@ EXPOSE 3001
 RUN npm install
 # Copy the rest of the sources
 COPY . /usr/src/app
-# Start the application
+# Start the application .
 CMD [ "npm", "start" ]

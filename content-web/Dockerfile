@@ -18,5 +18,5 @@ RUN npm install
 COPY . /usr/src/app
 # Build the Angular Application
 RUN ng build 
-# Start the application
+# Start the application .
 CMD [ "node", "app.js" ]
