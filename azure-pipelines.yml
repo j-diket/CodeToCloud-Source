@@ -26,8 +26,7 @@ stages:
                 dockerComposeFile: '**/docker-compose.yml'
                 additionalDockerComposeFiles: 'build.docker-compose.yml'
                 action: 'Push services'
-                additionalImageTags: '$(Build.BuildNumber)
-
+                additionalImageTags: '$(Build.BuildNumber)'
   - stage: DeployProd
     jobs:
     - deployment: infrastructure
