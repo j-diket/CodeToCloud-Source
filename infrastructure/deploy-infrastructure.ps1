@@ -1,12 +1,12 @@
 param
 (
-    [string] $studentprefix = "jd504"
+    [string] $studentsuffix = "jd504"
 )
 
-$resourcegroupName = "fabmedical-rg-" + $studentprefix
-$cosmosDBName = "fabmedical-cdb-" + $studentprefix
-$webappName = "fabmedical-web-" + $studentprefix
-$planName = "fabmedical-plan-" +$studentprefix
+$resourcegroupName = "fabmedical-rg-" + $studentsuffix
+$cosmosDBName = "fabmedical-cdb-" + $studentsuffix
+$webappName = "fabmedical-web-" + $studentsuffix
+$planName = "fabmedical-plan-" + $studentsuffix
 $location1 = "eastus"
 $location2 = "eastus2"
 $appInsights = "fabmedical-ai-" + $studentsuffix
