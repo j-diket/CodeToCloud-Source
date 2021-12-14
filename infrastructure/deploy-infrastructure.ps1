@@ -1,13 +1,19 @@
-$studentprefix = "jd504"
+param
+(
+    [string] $studentprefix = "jd504"
+)
+
 $resourcegroupName = "fabmedical-rg-" + $studentprefix
 $cosmosDBName = "fabmedical-cdb-" + $studentprefix
 $webappName = "fabmedical-web-" + $studentprefix
 $planName = "fabmedical-plan-" +$studentprefix
 $location1 = "eastus"
 $location2 = "eastus2"
-$ghpat=Read-Host -Prompt "Github Personal Access Token"
+$appInsights = "fabmedical-ai-" + $studentsuffix
 
-az group create -l $location1 -n $resourcegroupName
+
+# Create a group
+$rg = az group create --name $resourcegroupName --location $location1 | ConvertFrom-Json
 
 #Then create a CosmosDB
 az cosmosdb create --name $cosmosDBName `
@@ -20,15 +26,27 @@ az cosmosdb create --name $cosmosDBName `
 # Create an Azure App Service Plan
 az appservice plan create --name $planName --resource-group $resourcegroupName --sku S1 --is-linux
 
+az webapp config appsettings set --settings DOCKER_REGISTRY_SERVER_URL="https://ghcr.io" --name $($webappName) --resource-group $($resourcegroupName) 
+az webapp config appsettings set --settings DOCKER_REGISTRY_SERVER_USERNAME="notapplicable" --name $($webappName) --resource-group $($resourcegroupName) 
+az webapp config appsettings set --settings DOCKER_REGISTRY_SERVER_PASSWORD="$($env:CR_PAT)" --name $($webappName) --resource-group $($resourcegroupName)
+
 # Create an Azure Web App with NGINX container
-az webapp create --resource-group $resourcegroupName --plan $planName --name $webappName -i nginx
+az webapp create `
+--multicontainer-config-file ./docker-compose.yml `
+--multicontainer-config-type COMPOSE `
+--resource-group $($resourcegroupName) `
+--plan $($planName) `
+--name $($webappName)
 
 # Add container properties to Web App to pull from GitHub Container Registry images
 az webapp config container set `
---docker-registry-server-password $ghpat `
+--docker-registry-server-password $($env:CR_PAT) `
 --docker-registry-server-url https://ghcr.io `
 --docker-registry-server-user notapplicable `
 --multicontainer-config-file docker-compose.yml `
 --multicontainer-config-type COMPOSE `
---name $webappName `
---resource-group $resourcegroupName
+--name $($webappName) `
+--resource-group $resourcegroupName 
+
+az extension add --name application-insights
+az monitor app-insights component create --app $appInsights --location $location1 --kind web -g $resourcegroupName --application-type web --retention-time 120
