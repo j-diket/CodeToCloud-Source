@@ -6,7 +6,7 @@ const request = require('request');
 const app = express();
 
 const appInsights = require("applicationinsights");
-appInsights.setup("AI Instrumentation Key");
+appInsights.setup("8e1ad003-2a51-48b3-bb50-22a7ecc53caf");
 appInsights.start();
 
 app.use(express.static(path.join(__dirname, 'dist/content-web')));
