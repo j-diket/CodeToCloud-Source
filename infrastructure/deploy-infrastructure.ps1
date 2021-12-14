@@ -5,6 +5,7 @@ $webappName = "fabmedical-web-" + $studentprefix
 $planName = "fabmedical-plan-" +$studentprefix
 $location1 = "eastus"
 $location2 = "eastus2"
+$ghpat=Read-Host -Prompt "Github Personal Access Token"
 
 az group create -l $location1 -n $resourcegroupName
 
@@ -21,3 +22,13 @@ az appservice plan create --name $planName --resource-group $resourcegroupName -
 
 # Create an Azure Web App with NGINX container
 az webapp create --resource-group $resourcegroupName --plan $planName --name $webappName -i nginx
+
+# Add container properties to Web App to pull from GitHub Container Registry images
+az webapp config container set `
+--docker-registry-server-password $ghpat `
+--docker-registry-server-url https://ghcr.io `
+--docker-registry-server-user notapplicable `
+--multicontainer-config-file docker-compose.yml `
+--multicontainer-config-type COMPOSE `
+--name $webappName `
+--resource-group $resourcegroupName
