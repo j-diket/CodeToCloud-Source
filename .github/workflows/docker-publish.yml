@@ -2,8 +2,8 @@ name: Docker Compose Build and Deploy
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - '**'
     tags:
       - v*
   pull_request:
