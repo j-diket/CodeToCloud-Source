@@ -38,7 +38,7 @@ stages:
               - checkout: self
               - task: AzureCLI@2
                 inputs:
-                  azureSubscription: 'Fabrikam-Azure'
+                  azureSubscription: 'Visual Studio Enterprise Subscription'
                   scriptType: 'pscore'
                   scriptLocation: 'scriptPath'
                   scriptPath: './infrastructure/deploy-infrastructure.ps1'
